@@ -18,7 +18,6 @@ The repository is public so Portainer can fetch the JSON file.
 | Redis 7 | Cache and in-memory data store | 6379 |
 | Uptime Kuma | Uptime monitoring | 3001 |
 | Vaultwarden | Bitwarden-compatible password manager | 8088 |
-| Stirling-PDF | PDF tools | 8089 |
 | Adminer | Database administration UI | 8081 |
 
 ## Network exposure
