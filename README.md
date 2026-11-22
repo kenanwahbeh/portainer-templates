@@ -43,19 +43,23 @@ The following is the intended VPS architecture. These components are a design pl
 - **Telegram Bridge** receives authorized messages, maps conversations to OpenCode sessions, forwards requests to the OpenCode API, and returns responses to Telegram.
 - **Vaultwarden** is the human-managed, encrypted password vault and the source of truth for API keys, passwords, and other credentials.
 
-### Secret handling and manual startup
+### Secret handling and automatic startup
 
-The VPS will use a manual post-reboot startup procedure for services that require credentials:
+The selected operating model is **automatic startup and automatic vault unlock after every VPS reboot**. No manual unlock step should be required during normal recovery.
 
-1. Docker and Portainer start.
-2. Vaultwarden starts.
-3. The operator manually unlocks the password vault using an authorized Bitwarden-compatible client.
-4. The operator then performs the separately designed and secured secret-release/startup step for dependent services.
-5. OpenCode Server and the Telegram services start only after their required credentials have been made available.
+1. Docker and Portainer start automatically.
+2. The Vaultwarden server container starts automatically.
+3. A dedicated, restricted secret-unlock agent starts after Vaultwarden is healthy. It uses a bootstrap credential protected **outside Vaultwarden** by the VPS host to authenticate an approved Bitwarden-compatible client and unlock the encrypted user vault.
+4. The agent retrieves only the secrets required by the dependent services and delivers them through a separately designed, protected runtime mechanism.
+5. OpenCode Server and the Telegram services start only after their required secrets have been delivered successfully and their readiness checks pass.
 
-**Important:** Unlocking a Vaultwarden vault in a client does not unlock the Vaultwarden server for containers, nor does it automatically provide secrets to other containers. A dedicated, security-reviewed integration is required to retrieve and deliver secrets at runtime. Until that integration exists, do not claim that containers can read secrets directly from Vaultwarden.
+**Vault terminology:** Vaultwarden is a server and does not have a global server-side “locked/unlocked” switch. Unlocking refers to decrypting the user's encrypted vault in an authenticated client/session. Therefore, a running Vaultwarden container does not by itself mean that the vault has been unlocked or that application secrets are available.
 
-Secrets must never be committed to this repository, embedded in template JSON, or placed in public Compose files. OpenCode's API must remain private to the Docker network; do not publish it directly to the public internet. Telegram access must be restricted to explicitly authorized users.
+**Bootstrap credential requirement:** Automatic unlock necessarily depends on a bootstrap credential that is not stored inside the vault it unlocks. That credential must be protected on the VPS host, readable only by the dedicated unlock agent, excluded from Git, container images, template JSON, ordinary environment variables, and public Compose files. The exact host-side protection and client integration must be implemented and security-reviewed before enabling automatic secret retrieval. This creates an explicit trust boundary: compromise of the VPS host or its privileged account may expose the bootstrap credential and the secrets accessible to the agent.
+
+**Fail-closed behavior:** If Vaultwarden is unavailable, authentication or decryption fails, or required secrets cannot be retrieved, dependent services must remain stopped or unready. The system must not fall back to hard-coded credentials or start with missing secrets. Readiness should distinguish at least STARTING, READY (vault session established and required secrets delivered), and LOCKED/UNAVAILABLE (secrets unavailable). These are orchestration states, not native Vaultwarden server states.
+
+Secrets must never be committed to this repository, embedded in template JSON, baked into container images, or placed in public Compose files. OpenCode's API must remain private to the Docker network; do not publish it directly to the public internet. Telegram access must be restricted to explicitly authorized users.
 
 ## Important notes
 
