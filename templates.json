@@ -6,18 +6,36 @@
       "title": "PostgreSQL 17",
       "name": "bytebalance-postgresql",
       "description": "PostgreSQL relational database. Published on localhost only for Cloudflare Tunnel or local access.",
-      "categories": ["Database"],
+      "categories": [
+        "Database"
+      ],
       "platform": "linux",
       "image": "postgres:17-alpine",
       "logo": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/postgresql.png",
-      "ports": ["127.0.0.1:5432:5432/tcp"],
+      "ports": [
+        "127.0.0.1:5432:5432/tcp"
+      ],
       "env": [
-        { "name": "POSTGRES_USER", "label": "Database user", "default": "bytebalance" },
-        { "name": "POSTGRES_PASSWORD", "label": "Database password" },
-        { "name": "POSTGRES_DB", "label": "Initial database name", "default": "bytebalance" }
+        {
+          "name": "POSTGRES_USER",
+          "label": "Database user",
+          "default": "bytebalance"
+        },
+        {
+          "name": "POSTGRES_PASSWORD",
+          "label": "Database password"
+        },
+        {
+          "name": "POSTGRES_DB",
+          "label": "Initial database name",
+          "default": "bytebalance"
+        }
       ],
       "volumes": [
-        { "container": "/var/lib/postgresql/data", "bind": "/opt/bytebalance/postgresql/data" }
+        {
+          "container": "/var/lib/postgresql/data",
+          "bind": "/opt/bytebalance/postgresql/data"
+        }
       ],
       "restart_policy": "unless-stopped",
       "note": "The host port is bound to 127.0.0.1 only, not all network interfaces. Choose a strong password and back up /opt/bytebalance/postgresql/data. Do not change the major image version without planning a database upgrade."
@@ -27,17 +45,28 @@
       "title": "Redis 7",
       "name": "bytebalance-redis",
       "description": "In-memory data store and cache with persistence and password authentication. Localhost-only port binding.",
-      "categories": ["Database", "Cache"],
+      "categories": [
+        "Database",
+        "Cache"
+      ],
       "platform": "linux",
       "image": "redis:7-alpine",
       "logo": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/redis.png",
-      "ports": ["127.0.0.1:6379:6379/tcp"],
+      "ports": [
+        "127.0.0.1:6379:6379/tcp"
+      ],
       "env": [
-        { "name": "REDIS_PASSWORD", "label": "Redis password" }
+        {
+          "name": "REDIS_PASSWORD",
+          "label": "Redis password"
+        }
       ],
       "command": "sh -c 'exec redis-server --appendonly yes --requirepass \"$REDIS_PASSWORD\"'",
       "volumes": [
-        { "container": "/data", "bind": "/opt/bytebalance/redis/data" }
+        {
+          "container": "/data",
+          "bind": "/opt/bytebalance/redis/data"
+        }
       ],
       "restart_policy": "unless-stopped",
       "note": "Use a long, unique password. The port is bound to localhost only. Redis is not a substitute for a durable database."
@@ -47,13 +76,20 @@
       "title": "Uptime Kuma",
       "name": "bytebalance-uptime-kuma",
       "description": "Self-hosted uptime and service monitoring dashboard.",
-      "categories": ["Monitoring"],
+      "categories": [
+        "Monitoring"
+      ],
       "platform": "linux",
       "image": "louislam/uptime-kuma:2",
       "logo": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/uptime-kuma.png",
-      "ports": ["127.0.0.1:3001:3001/tcp"],
+      "ports": [
+        "127.0.0.1:3001:3001/tcp"
+      ],
       "volumes": [
-        { "container": "/app/data", "bind": "/opt/bytebalance/uptime-kuma/data" }
+        {
+          "container": "/app/data",
+          "bind": "/opt/bytebalance/uptime-kuma/data"
+        }
       ],
       "restart_policy": "unless-stopped",
       "note": "Open the dashboard through a Cloudflare Tunnel hostname routed to http://127.0.0.1:3001. Create an administrator account immediately and keep the application updated."
@@ -63,51 +99,56 @@
       "title": "Vaultwarden",
       "name": "bytebalance-vaultwarden",
       "description": "Lightweight self-hosted Bitwarden-compatible password manager server.",
-      "categories": ["Security", "Password Management"],
+      "categories": [
+        "Security",
+        "Password Management"
+      ],
       "platform": "linux",
       "image": "vaultwarden/server:latest",
       "logo": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/vaultwarden.png",
-      "ports": ["127.0.0.1:8088:80/tcp"],
+      "ports": [
+        "127.0.0.1:8088:80/tcp"
+      ],
       "env": [
-        { "name": "SIGNUPS_ALLOWED", "label": "Allow new registrations (disable after creating your account)", "default": "false" },
-        { "name": "WEBSOCKET_ENABLED", "label": "Enable WebSocket notifications", "default": "true" },
-        { "name": "DOMAIN", "label": "Public HTTPS URL (optional)" }
+        {
+          "name": "SIGNUPS_ALLOWED",
+          "label": "Allow new registrations (disable after creating your account)",
+          "default": "false"
+        },
+        {
+          "name": "WEBSOCKET_ENABLED",
+          "label": "Enable WebSocket notifications",
+          "default": "true"
+        },
+        {
+          "name": "DOMAIN",
+          "label": "Public HTTPS URL (optional)"
+        }
       ],
       "volumes": [
-        { "container": "/data", "bind": "/opt/bytebalance/vaultwarden/data" }
+        {
+          "container": "/data",
+          "bind": "/opt/bytebalance/vaultwarden/data"
+        }
       ],
       "restart_policy": "unless-stopped",
       "note": "The web port is bound to localhost only. Before first use, temporarily set SIGNUPS_ALLOWED=true, create your account, then redeploy with SIGNUPS_ALLOWED=false. Put it behind HTTPS using Cloudflare Tunnel. Back up /opt/bytebalance/vaultwarden/data and protect it as highly sensitive data. This is an independent Vaultwarden server, not an official Bitwarden service."
     },
     {
       "type": 1,
-      "title": "Stirling-PDF",
-      "name": "bytebalance-stirling-pdf",
-      "description": "Self-hosted web application for common PDF operations.",
-      "categories": ["Productivity", "Documents"],
-      "platform": "linux",
-      "image": "stirlingtools/stirling-pdf:latest",
-      "logo": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/stirling-pdf.png",
-      "ports": ["127.0.0.1:8089:8080/tcp"],
-      "volumes": [
-        { "container": "/configs", "bind": "/opt/bytebalance/stirling-pdf/configs" },
-        { "container": "/customFiles", "bind": "/opt/bytebalance/stirling-pdf/customFiles" },
-        { "container": "/logs", "bind": "/opt/bytebalance/stirling-pdf/logs" },
-        { "container": "/pipeline", "bind": "/opt/bytebalance/stirling-pdf/pipeline" }
-      ],
-      "restart_policy": "unless-stopped",
-      "note": "The web port is bound to localhost only. PDF processing can use significant CPU and memory; avoid uploading confidential documents unless your server security and backups are configured appropriately."
-    },
-    {
-      "type": 1,
       "title": "Adminer",
       "name": "bytebalance-adminer",
       "description": "Lightweight database administration web interface.",
-      "categories": ["Database", "Administration"],
+      "categories": [
+        "Database",
+        "Administration"
+      ],
       "platform": "linux",
       "image": "adminer:latest",
       "logo": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/adminer.png",
-      "ports": ["127.0.0.1:8081:8080/tcp"],
+      "ports": [
+        "127.0.0.1:8081:8080/tcp"
+      ],
       "restart_policy": "unless-stopped",
       "note": "The web port is bound to localhost only. Adminer does not include a database server; connect it to an existing database. Keep it behind Cloudflare Access or another authentication layer and do not expose it publicly."
     }
