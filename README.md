@@ -36,7 +36,7 @@ Adminer is a stateless database administration interface in this template and do
 
 ## Important notes
 
-- Templates create new containers and data directories; they do not update or replace existing services.
+- Templates create new containers and Docker-managed volumes; they do not update or replace existing services.
 - Check available disk space and memory before deploying additional services.
 - Set strong, unique passwords wherever prompted.
 - Vaultwarden registrations are disabled by default. Temporarily enable registrations only for initial account creation, then disable them again.
