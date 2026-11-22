@@ -1,0 +1,30 @@
+
+{
+  "version": "2",
+  "templates": [
+    {
+      "type": 1,
+      "title": "Uptime Kuma",
+      "name": "uptime-kuma",
+      "description": "Self-hosted monitoring tool",
+      "categories": ["Monitoring"],
+      "platform": "linux",
+      "logo": "https://raw.githubusercontent.com/louislam/uptime-kuma/master/public/icon.png",
+      "image": "louislam/uptime-kuma:1",
+      "ports": [
+        {
+          "container": "3001",
+          "host": "3001",
+          "protocol": "tcp"
+        }
+      ],
+      "volumes": [
+        {
+          "container": "/app/data",
+          "bind": "/opt/uptime-kuma/data"
+        }
+      ],
+      "restart_policy": "unless-stopped"
+    }
+  ]
+}
