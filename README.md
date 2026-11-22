@@ -34,6 +34,29 @@ On a standard Linux Docker installation, local Docker volumes are stored under `
 
 Adminer is a stateless database administration interface in this template and does not require a persistent data volume.
 
+## Planned AI and messaging architecture
+
+The following is the intended VPS architecture. These components are a design plan only; they are **not included as deployable templates yet**.
+
+- **OpenCode Server** is the AI execution service and exposes its API only on a private Docker network.
+- **Telegram User** connects a personal Telegram account using the Telegram client protocol (MTProto).
+- **Telegram Bridge** receives authorized messages, maps conversations to OpenCode sessions, forwards requests to the OpenCode API, and returns responses to Telegram.
+- **Vaultwarden** is the human-managed, encrypted password vault and the source of truth for API keys, passwords, and other credentials.
+
+### Secret handling and manual startup
+
+The VPS will use a manual post-reboot startup procedure for services that require credentials:
+
+1. Docker and Portainer start.
+2. Vaultwarden starts.
+3. The operator manually unlocks the password vault using an authorized Bitwarden-compatible client.
+4. The operator then performs the separately designed and secured secret-release/startup step for dependent services.
+5. OpenCode Server and the Telegram services start only after their required credentials have been made available.
+
+**Important:** Unlocking a Vaultwarden vault in a client does not unlock the Vaultwarden server for containers, nor does it automatically provide secrets to other containers. A dedicated, security-reviewed integration is required to retrieve and deliver secrets at runtime. Until that integration exists, do not claim that containers can read secrets directly from Vaultwarden.
+
+Secrets must never be committed to this repository, embedded in template JSON, or placed in public Compose files. OpenCode's API must remain private to the Docker network; do not publish it directly to the public internet. Telegram access must be restricted to explicitly authorized users.
+
 ## Important notes
 
 - Templates create new containers and Docker-managed volumes; they do not update or replace existing services.
