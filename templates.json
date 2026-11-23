@@ -101,7 +101,7 @@
         "Password Management"
       ],
       "platform": "linux",
-      "image": "vaultwarden/server:latest",
+      "image": "vaultwarden/server:1.37.5",
       "logo": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/vaultwarden.png",
       "ports": [
         "127.0.0.1:8088:80/tcp"
@@ -128,7 +128,7 @@
         }
       ],
       "restart_policy": "unless-stopped",
-      "note": "The web port is bound to localhost only. Before first use, temporarily set SIGNUPS_ALLOWED=true, create your account, then redeploy with SIGNUPS_ALLOWED=false. Put it behind HTTPS using Cloudflare Tunnel. Docker manages the persistent volume; protect it as highly sensitive data and do not remove it when deleting or recreating the container. This is an independent Vaultwarden server, not an official Bitwarden service."
+      "note": "Pinned to Vaultwarden 1.37.5. The web port is bound to localhost only. Before first use, temporarily set SIGNUPS_ALLOWED=true, create your account, then redeploy with SIGNUPS_ALLOWED=false. Put it behind HTTPS using Cloudflare Tunnel. Docker manages the persistent volume; protect it as highly sensitive data and do not remove it when deleting or recreating the container. This is an independent Vaultwarden server, not an official Bitwarden service."
     },
     {
       "type": 1,
