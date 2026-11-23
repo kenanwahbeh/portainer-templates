@@ -6,36 +6,17 @@
       "title": "PostgreSQL 18",
       "name": "bytebalance-postgresql",
       "description": "PostgreSQL relational database. Published on localhost only for Cloudflare Tunnel or local access.",
-      "categories": [
-        "Database"
-      ],
+      "categories": ["Database"],
       "platform": "linux",
       "image": "postgres:18.7-alpine",
       "logo": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/postgresql.png",
-      "ports": [
-        "127.0.0.1:5432:5432/tcp"
-      ],
+      "ports": ["127.0.0.1:5432:5432/tcp"],
       "env": [
-        {
-          "name": "POSTGRES_USER",
-          "label": "Database user",
-          "default": "bytebalance"
-        },
-        {
-          "name": "POSTGRES_PASSWORD",
-          "label": "Database password"
-        },
-        {
-          "name": "POSTGRES_DB",
-          "label": "Initial database name",
-          "default": "bytebalance"
-        }
+        {"name": "POSTGRES_USER", "label": "Database user", "default": "bytebalance"},
+        {"name": "POSTGRES_PASSWORD", "label": "Database password"},
+        {"name": "POSTGRES_DB", "label": "Initial database name", "default": "bytebalance"}
       ],
-      "volumes": [
-        {
-          "container": "/var/lib/postgresql"
-        }
-      ],
+      "volumes": [{"container": "/var/lib/postgresql"}],
       "restart_policy": "unless-stopped",
       "note": "The host port is bound to 127.0.0.1 only, not all network interfaces. Choose a strong password. Docker manages the persistent volume; do not remove it when deleting or recreating the container. PostgreSQL 18 uses /var/lib/postgresql as its volume mount point."
     },
@@ -44,28 +25,14 @@
       "title": "Redis 8",
       "name": "bytebalance-redis",
       "description": "In-memory data store and cache with persistence and password authentication. Localhost-only port binding.",
-      "categories": [
-        "Database",
-        "Cache"
-      ],
+      "categories": ["Database", "Cache"],
       "platform": "linux",
       "image": "redis:8.10.3-alpine",
       "logo": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/redis.png",
-      "ports": [
-        "127.0.0.1:6379:6379/tcp"
-      ],
-      "env": [
-        {
-          "name": "REDIS_PASSWORD",
-          "label": "Redis password"
-        }
-      ],
+      "ports": ["127.0.0.1:6379:6379/tcp"],
+      "env": [{"name": "REDIS_PASSWORD", "label": "Redis password"}],
       "command": "sh -c 'exec redis-server --appendonly yes --requirepass \"$REDIS_PASSWORD\"'",
-      "volumes": [
-        {
-          "container": "/data"
-        }
-      ],
+      "volumes": [{"container": "/data"}],
       "restart_policy": "unless-stopped",
       "note": "Use a long, unique password. The port is bound to localhost only. Docker manages the persistent volume; do not remove it when deleting or recreating the container. Redis is not a substitute for a durable database."
     },
@@ -74,20 +41,12 @@
       "title": "Uptime Kuma",
       "name": "bytebalance-uptime-kuma",
       "description": "Self-hosted uptime and service monitoring dashboard.",
-      "categories": [
-        "Monitoring"
-      ],
+      "categories": ["Monitoring"],
       "platform": "linux",
       "image": "louislam/uptime-kuma:2.5.12",
       "logo": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/uptime-kuma.png",
-      "ports": [
-        "127.0.0.1:3001:3001/tcp"
-      ],
-      "volumes": [
-        {
-          "container": "/app/data"
-        }
-      ],
+      "ports": ["127.0.0.1:3001:3001/tcp"],
+      "volumes": [{"container": "/app/data"}],
       "restart_policy": "unless-stopped",
       "note": "Open the dashboard through a Cloudflare Tunnel hostname routed to http://127.0.0.1:3001. Create an administrator account immediately and keep the application updated. Docker manages the persistent volume; do not remove it when deleting or recreating the container."
     },
@@ -96,55 +55,30 @@
       "title": "Vaultwarden",
       "name": "bytebalance-vaultwarden",
       "description": "Lightweight self-hosted Bitwarden-compatible password manager server.",
-      "categories": [
-        "Security",
-        "Password Management"
-      ],
+      "categories": ["Security", "Password Management"],
       "platform": "linux",
-      "image": "vaultwarden/server:latest",
+      "image": "vaultwarden/server:1.37.5",
       "logo": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/vaultwarden.png",
-      "ports": [
-        "127.0.0.1:8088:80/tcp"
-      ],
+      "ports": ["127.0.0.1:8088:80/tcp"],
       "env": [
-        {
-          "name": "SIGNUPS_ALLOWED",
-          "label": "Allow new registrations (disable after creating your account)",
-          "default": "false"
-        },
-        {
-          "name": "WEBSOCKET_ENABLED",
-          "label": "Enable WebSocket notifications",
-          "default": "true"
-        },
-        {
-          "name": "DOMAIN",
-          "label": "Public HTTPS URL (optional)"
-        }
+        {"name": "SIGNUPS_ALLOWED", "label": "Allow new registrations (disable after creating your account)", "default": "false"},
+        {"name": "WEBSOCKET_ENABLED", "label": "Enable WebSocket notifications", "default": "true"},
+        {"name": "DOMAIN", "label": "Public HTTPS URL (optional)"}
       ],
-      "volumes": [
-        {
-          "container": "/data"
-        }
-      ],
+      "volumes": [{"container": "/data"}],
       "restart_policy": "unless-stopped",
-      "note": "The web port is bound to localhost only. Before first use, temporarily set SIGNUPS_ALLOWED=true, create your account, then redeploy with SIGNUPS_ALLOWED=false. Put it behind HTTPS using Cloudflare Tunnel. Docker manages the persistent volume; protect it as highly sensitive data and do not remove it when deleting or recreating the container. This is an independent Vaultwarden server, not an official Bitwarden service."
+      "note": "Pinned to Vaultwarden 1.37.5. The web port is bound to localhost only. Before first use, temporarily set SIGNUPS_ALLOWED=true, create your account, then redeploy with SIGNUPS_ALLOWED=false. Put it behind HTTPS using Cloudflare Tunnel. Docker manages the persistent volume; protect it as highly sensitive data and do not remove it when deleting or recreating the container. This is an independent Vaultwarden server, not an official Bitwarden service."
     },
     {
       "type": 1,
       "title": "Adminer",
       "name": "bytebalance-adminer",
       "description": "Lightweight database administration web interface.",
-      "categories": [
-        "Database",
-        "Administration"
-      ],
+      "categories": ["Database", "Administration"],
       "platform": "linux",
       "image": "adminer:latest",
       "logo": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/adminer.png",
-      "ports": [
-        "127.0.0.1:8081:8080/tcp"
-      ],
+      "ports": ["127.0.0.1:8081:8080/tcp"],
       "restart_policy": "unless-stopped",
       "note": "The web port is bound to localhost only. Adminer does not include a database server; connect it to an existing database. Keep it behind Cloudflare Access or another authentication layer and do not expose it publicly."
     }
